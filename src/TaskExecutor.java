@@ -17,25 +17,6 @@ public class TaskExecutor {
 
         long startTime = currentTimeMillis();
 
-        //List<Boolean> flags = new ArrayList<Boolean>();
-        double quantidadeEscrita = ((double)limit/100)*(double)e;
-        System.out.println("quantidade total: " + limit);
-        System.out.println("quantidade escrita: "+quantidadeEscrita);
-
-        for(int i = 0; i < (int)quantidadeEscrita; i++) tipos[i] = true;
-        for(int i = 0; i < limit - (int)quantidadeEscrita; i++) tipos[i] = false;
-
-        Random rnd = new Random();
-        for (int i = tipos.length - 1; i > 0; i--)
-        {
-            int index = rnd.nextInt(i + 1);
-            // Simple swap
-            boolean a = tipos[index];
-            tipos[index] = tipos[i];
-            tipos[i] = a;
-        }
-
-
         int totalCarregadores = 10;
         Carregador[] carregadores = new Carregador[totalCarregadores];
         int startIndex = 0;
@@ -46,7 +27,7 @@ public class TaskExecutor {
             if (i == totalCarregadores - 1) {
                 load += limit % totalCarregadores;
             }
-            carregadores[i] = new Carregador("Carregador " + (i + 1), custos, valores, startIndex,load,e);
+            carregadores[i] = new Carregador("Carregador " + (i + 1), custos,tipos, valores, startIndex,load,e);
             startIndex += load;
         }
         for (int i = 0; i < totalCarregadores; i++) {
@@ -64,7 +45,8 @@ public class TaskExecutor {
             }
         }
         filaTarefas = new FilaTarefas(custos,tipos,valores);
-        System.out.println("tempo de carregamento: " + (currentTimeMillis()-startTime));
+        System.out.println("tempo de carregamento: " + (currentTimeMillis()-startTime) + " milisegundos");
+        System.out.println("lista com 10 tarefas do total de "+ limit+" tarefas criadas aleatoriamente:");
         for (int i=0;i<limit;i+=(limit/10)){
             Tarefa tarefa = filaTarefas.getTarefa(i);
             System.out.println(tarefa.getCusto() + ", " + tarefa.isEscrita() + ", " + tarefa.getValor());
