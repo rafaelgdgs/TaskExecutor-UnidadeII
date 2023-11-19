@@ -11,7 +11,7 @@ public class Carregador extends Thread{
     private int startIndex;
     private int load;
     private int e;
-    public Carregador(String name, float custos[], boolean tipos[],byte valores[], int startIndex, int load, int e){
+    public Carregador(String name, float custos[], boolean tipos[], byte valores[], int startIndex, int load, int e){
         super(name);
         this.custos = custos;
         this.tipos = tipos;
@@ -23,21 +23,26 @@ public class Carregador extends Thread{
     }
     @Override
     public void run() {
-        Random random = new Random(); //mover para fora do for
-        List<Boolean> flags = new ArrayList<Boolean>();
+        Random random = new Random();
         double quantidadeEscrita = ((double)load/100)*(double)e;
-        System.out.println(quantidadeEscrita);
+        System.out.println("quantidade de tarefas de escrita em "+ getName()+" : "+ quantidadeEscrita);
 
-        for(int i = 0; i < (int)quantidadeEscrita; i++) flags.add(true);
-        for(int i = 0; i < load - (int)quantidadeEscrita; i++) flags.add(false);
-        Collections.shuffle(flags);
-
-        for (int i = startIndex; i < startIndex + load; i++) {
+        for(int i = startIndex; i < startIndex + (int)quantidadeEscrita; i++) tipos[i] = true;
+        for(int i = startIndex + (int)quantidadeEscrita; i < startIndex + load; i++) tipos[i] = false;
+        System.out.println("fim da escrita dos booleans da thread: " + getName());
 
 
-            custos[i] = random.nextFloat(10.0f);
-            tipos[i] = flags.get(i-startIndex);
+        for (int i = startIndex; i < startIndex + load ; i++) {
+
+
+            custos[i] = random.nextFloat(0.01f);
             valores[i] = (byte) random.nextInt(10);
+
+            int index = random.nextInt(load) + startIndex;
+            // Simple swap
+            boolean a = tipos[index];
+            tipos[index] = tipos[i];
+            tipos[i] = a;
         }
     }
 }

@@ -1,3 +1,5 @@
+import java.util.*;
+
 import static java.lang.System.currentTimeMillis;
 
 public class TaskExecutor {
@@ -25,7 +27,7 @@ public class TaskExecutor {
             if (i == totalCarregadores - 1) {
                 load += limit % totalCarregadores;
             }
-            carregadores[i] = new Carregador("Carregador " + (i + 1), custos, tipos, valores, startIndex,load,e);
+            carregadores[i] = new Carregador("Carregador " + (i + 1), custos,tipos, valores, startIndex,load,e);
             startIndex += load;
         }
         for (int i = 0; i < totalCarregadores; i++) {
@@ -43,8 +45,9 @@ public class TaskExecutor {
             }
         }
         filaTarefas = new FilaTarefas(custos,tipos,valores);
-        System.out.println("tempo de carregamento: " + (currentTimeMillis()-startTime));
-        for (int i=0;i<limit;i++){
+        System.out.println("tempo de carregamento: " + (currentTimeMillis()-startTime) + " milisegundos");
+        System.out.println("lista com 10 tarefas do total de "+ limit+" tarefas criadas aleatoriamente:");
+        for (int i=0;i<limit;i+=(limit/10)){
             Tarefa tarefa = filaTarefas.getTarefa(i);
             System.out.println(tarefa.getCusto() + ", " + tarefa.isEscrita() + ", " + tarefa.getValor());
         }
