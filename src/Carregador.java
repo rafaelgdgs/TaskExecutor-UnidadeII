@@ -35,7 +35,7 @@ public class Carregador extends Thread{
         for (int i = startIndex; i < startIndex + load; i++) {
 
 
-            custos[i] = random.nextFloat(10.0f);
+            custos[i] = random.nextFloat(0.01f);
             tipos[i] = flags.get(i-startIndex);
             valores[i] = (byte) random.nextInt(10);
         }
