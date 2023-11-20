@@ -7,8 +7,12 @@ public class FilaResultados {
         this.tempos = new int[n];
     }
 
-    public synchronized void addResultado(Resultado resultado){
-            resultados[resultado.getId()] = resultado.getResultado();
-            tempos[resultado.getId()] = resultado.getTempo();
+    public void addResultado(Resultado resultado) {
+        resultados[resultado.getId()] = resultado.getResultado();
+        tempos[resultado.getId()] = resultado.getTempo();
+    }
+
+    public Resultado getResultado(int id) {
+        return new Resultado(id, resultados[id], tempos[id]);
     }
 }
