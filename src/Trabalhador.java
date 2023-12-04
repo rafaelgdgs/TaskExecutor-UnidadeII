@@ -36,8 +36,9 @@ public class Trabalhador extends Thread{
 
     private void fazerTarefa(Tarefa tarefa) throws IOException, InterruptedException {
         this.startTime = currentTimeMillis();
-        wait((long)(tarefa.getCusto()*1000));
+        sleep((long)(tarefa.getCusto()*1000));
         if(tarefa.isEscrita()){
+            System.out.println("escrita na thread:" + this.getName());
             executor.receberResultado(escrita(tarefa));
         }
         else {
@@ -48,13 +49,13 @@ public class Trabalhador extends Thread{
     private Resultado leitura(Tarefa tarefa) throws IOException {
         int valor = acesso.read();
         Resultado resultado = new Resultado(tarefa.getId(),valor,(int) (currentTimeMillis()-startTime));
-        System.out.println(resultado);
+        //System.out.println(resultado);
         return resultado;
     }
     private Resultado escrita(Tarefa tarefa) throws IOException {
         int valor = acesso.write(tarefa.getValor());
         Resultado resultado = new Resultado(tarefa.getId(),valor, (int) (currentTimeMillis()-startTime));
-        System.out.println(resultado);
+        //System.out.println(resultado);
         return resultado;
     }
 }

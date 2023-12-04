@@ -23,9 +23,13 @@ public class Acesso {
         }
 
         PrintWriter printWriter = new PrintWriter(file);
-        printWriter.print(0);
-        printWriter.close();
+        //printWriter.print(0);
+
         //BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
+
+        //printWriter.flush();
+        printWriter.println("0");
+        printWriter.close();
     }
 
     public int read() throws IOException {
@@ -36,7 +40,7 @@ public class Acesso {
                 escritaLock = escrita.tryAcquire(1);
                 wait(10);
             }
-            System.out.println("acquired escrita");
+            //System.out.println("acquired escrita");
         } catch (InterruptedException e) {
             e.printStackTrace();
         } finally {
@@ -63,15 +67,18 @@ public class Acesso {
                 escritaLock = escrita.tryAcquire(1);
                 wait(10);
             }
-            System.out.println("acquired escrita");
+            //System.out.println("acquired escrita");
 
         } catch (InterruptedException e) {
             e.printStackTrace();
         } finally {
 
             try {
-                while (!escrita.tryAcquire(threads)){
-                    System.out.println("escrita tentando adiquirir");
+                boolean leituraLock = leitura.tryAcquire(threads);
+                System.out.println("escrita tentando adiquirir leitura lock " + leitura.availablePermits());
+                while (!leituraLock){
+                    System.out.println("escrita tentando adiquirir leitura lock " + leitura.availablePermits());
+                    leituraLock = leitura.tryAcquire(threads);
                     wait(10);
                 }
 
@@ -81,15 +88,29 @@ public class Acesso {
                 throw new RuntimeException(e);
 
             } finally {
+
                 BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
                 String s = bufferedReader.readLine();
                 bufferedReader.close();
+
                 //System.out.println(s);
-                int arquivo = Integer.parseInt(s);
+                int arquivo = 0;
+                try{
+                    arquivo = Integer.parseInt(s);
+
+                }
+                catch (Exception e){
+                    System.out.println("valor de s: " + s);
+                    throw new RuntimeException(e);
+                }
+
+
+
+
                 int soma =  arquivo + valor;
                 PrintWriter printWriter = new PrintWriter(file);
-                printWriter.flush();
-                printWriter.print(soma);
+                //printWriter.flush();
+                printWriter.println(soma);
                 printWriter.close();
 
                 leitura.release(threads);
