@@ -1,5 +1,6 @@
 import java.io.*;
 import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
 
 public class Acesso {
 
@@ -35,84 +36,64 @@ public class Acesso {
     public int read() throws IOException {
 
         try {
-            boolean escritaLock = escrita.tryAcquire(1);
-            while(!escritaLock){
-                escritaLock = escrita.tryAcquire(1);
-                wait(10);
-            }
+            escrita.acquire();
             //System.out.println("acquired escrita");
         } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
             e.printStackTrace();
         } finally {
             escrita.release();
             try {
-                leitura.acquire(1);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-
-            } finally {
+                leitura.acquire();
                 BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
                 String s = bufferedReader.readLine();
                 bufferedReader.close();
-                leitura.release(1);
+                leitura.release();
                 return Integer.parseInt(s);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                throw new RuntimeException(e);
             }
         }
     }
 
     public int write(int valor) throws IOException {
         try {
-            boolean escritaLock = escrita.tryAcquire(1);
-            while(!escritaLock){
-                escritaLock = escrita.tryAcquire(1);
-                wait(10);
-            }
+            escrita.acquire();
             //System.out.println("acquired escrita");
 
         } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
             e.printStackTrace();
         } finally {
-
+            int arquivo = 0, soma = 0;
             try {
-                boolean leituraLock = leitura.tryAcquire(threads);
-                System.out.println("escrita tentando adiquirir leitura lock " + leitura.availablePermits());
-                while (!leituraLock){
-                    System.out.println("escrita tentando adiquirir leitura lock " + leitura.availablePermits());
-                    leituraLock = leitura.tryAcquire(threads);
-                    wait(10);
-                }
-
-
-
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-
-            } finally {
-
+                leitura.acquire(threads);
                 BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
                 String s = bufferedReader.readLine();
                 bufferedReader.close();
 
-                //System.out.println(s);
-                int arquivo = 0;
+
                 try{
                     arquivo = Integer.parseInt(s);
-
-                }
-                catch (Exception e){
                     System.out.println("valor de s: " + s);
-                    throw new RuntimeException(e);
+                }
+                catch (NumberFormatException e){
+                    System.out.println("valor de ss: " + s);
+                    throw new RuntimeException("Erro ao converter valor do arquivo para inteiro", e);
+                }
+
+                soma =  arquivo + valor;
+                try (PrintWriter printWriter = new PrintWriter(file)) {
+                    printWriter.println(soma);
                 }
 
 
+            } catch (InterruptedException | IOException e) {
+                Thread.currentThread().interrupt();
+                throw new RuntimeException(e);
 
-
-                int soma =  arquivo + valor;
-                PrintWriter printWriter = new PrintWriter(file);
-                //printWriter.flush();
-                printWriter.println(soma);
-                printWriter.close();
-
+            } finally {
                 leitura.release(threads);
                 escrita.release(1);
                 return soma;
