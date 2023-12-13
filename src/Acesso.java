@@ -11,6 +11,8 @@ public class Acesso {
     private File file;
     private int threads;
 
+    private int valorCache;
+
     public Acesso(int threads) throws IOException {
         this.threads = threads;
         escrita = new Semaphore(1, true);
@@ -31,6 +33,7 @@ public class Acesso {
         //printWriter.flush();
         printWriter.println("0");
         printWriter.close();
+        valorCache = 0;
     }
 
     public int read() throws IOException {
@@ -45,11 +48,12 @@ public class Acesso {
             escrita.release();
             try {
                 leitura.acquire();
-                BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
-                String s = bufferedReader.readLine();
-                bufferedReader.close();
+//                BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
+//                String s = bufferedReader.readLine();
+//                bufferedReader.close();
                 leitura.release();
-                return Integer.parseInt(s);
+//                return Integer.parseInt(s);
+                return valorCache;
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
                 throw new RuntimeException(e);
@@ -76,16 +80,17 @@ public class Acesso {
 
                 try{
                     arquivo = Integer.parseInt(s);
-                    System.out.println("valor de s: " + s);
+                    //System.out.println("valor de s: " + s);
                 }
                 catch (NumberFormatException e){
-                    System.out.println("valor de ss: " + s);
+                    //System.out.println("valor de ss: " + s);
                     throw new RuntimeException("Erro ao converter valor do arquivo para inteiro", e);
                 }
 
                 soma =  arquivo + valor;
                 try (PrintWriter printWriter = new PrintWriter(file)) {
                     printWriter.println(soma);
+                    valorCache = soma;
                 }
 
 

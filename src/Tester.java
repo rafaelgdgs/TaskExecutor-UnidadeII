@@ -6,8 +6,8 @@ import java.io.PrintWriter;
 import static java.lang.System.currentTimeMillis;
 
 public class Tester {
-    private final int[] valoresN = {5, 7, 9};
-    private final int[] valoresT = {1, 16, 256};
+    private final int[] valoresN = {5,7,9};
+    private final int[] valoresT = {256,16,1};
     private final int[] valoresE = {0, 40};
 
 
@@ -17,10 +17,10 @@ public class Tester {
             for (int t: valoresT
             ) {
                 for(int e: valoresE){
-                    System.out.println("Iniciando teste N"+n+"-T"+t);
+                    System.out.println("Iniciando teste N"+n+"-T"+t+"-E"+e+"%");
                     TaskExecutor taskExecutor = new TaskExecutor();
                     taskExecutor.Carregamento(n, e);
-                    System.out.println("Carregamento do teste N"+n+"-T"+t+" finalizado");
+                    System.out.println("Carregamento do teste N"+n+"-T"+t+"-E"+e+"%"+" finalizado");
                     System.out.println("Começando processamento");
                     long startTime = currentTimeMillis();
                     taskExecutor.Processamento(t);

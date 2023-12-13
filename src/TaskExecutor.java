@@ -14,7 +14,7 @@ public class TaskExecutor {
         this.limit = (int) Math.pow(10.0, n);
         filaResultados = new FilaResultados(limit);
 
-        float[] custos = new float[limit];
+        byte[] custos = new byte[limit];
         boolean[] tipos = new boolean[limit];
         byte[] valores = new byte[limit];
 
@@ -68,7 +68,7 @@ public class TaskExecutor {
             if (i == t - 1) {
                 load += limit % t;
             }
-            trabalhadores[i] = new Trabalhador(executor, acesso,startIndex,load);
+            trabalhadores[i] = new Trabalhador("Thread " + (i + 1),executor, acesso,startIndex,load);
             startIndex += load;
         }
 

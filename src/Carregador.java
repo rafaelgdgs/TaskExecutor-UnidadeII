@@ -4,14 +4,14 @@ import java.util.List;
 import java.util.Random;
 public class Carregador extends Thread{
 
-    private float custos[];
+    private byte custos[];
     private boolean tipos[];
     private byte valores[];
 
     private int startIndex;
     private int load;
     private int e;
-    public Carregador(String name, float custos[], boolean tipos[], byte valores[], int startIndex, int load, int e){
+    public Carregador(String name, byte custos[], boolean tipos[], byte valores[], int startIndex, int load, int e){
         super(name);
         this.custos = custos;
         this.tipos = tipos;
@@ -35,7 +35,7 @@ public class Carregador extends Thread{
         for (int i = startIndex; i < startIndex + load ; i++) {
 
 
-            custos[i] = random.nextFloat(0.01f);
+            custos[i] = (byte) random.nextInt(10);
             valores[i] = (byte) random.nextInt(10);
 
             int index = random.nextInt(load) + startIndex;

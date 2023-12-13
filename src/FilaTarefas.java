@@ -1,9 +1,9 @@
 public class FilaTarefas {
-    private float custos[];
+    private byte custos[];
     private boolean tipos[];
     private byte valores[];
 
-    public FilaTarefas(float[] custos, boolean[] tipos, byte[] valores) {
+    public FilaTarefas(byte[] custos, boolean[] tipos, byte[] valores) {
         this.custos = custos;
         this.tipos = tipos;
         this.valores = valores;

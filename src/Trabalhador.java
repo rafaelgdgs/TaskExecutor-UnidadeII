@@ -11,7 +11,8 @@ public class Trabalhador extends Thread{
     private int startIndex;
     private int load;
 
-    public Trabalhador(Executor executor, Acesso acesso, int startIndex,int load){
+    public Trabalhador(String name, Executor executor, Acesso acesso, int startIndex,int load){
+        super(name);
         this.executor = executor;
         this.acesso = acesso;
         this.startIndex = startIndex;
@@ -22,6 +23,9 @@ public class Trabalhador extends Thread{
     @Override
     public void run() {
         for (int i = startIndex; i < startIndex + load; i++) {
+            if((i-startIndex)%(load/100) == 0){
+                System.out.println(this.getName() + " fiz "+ (i-startIndex) / (load/100) + "%");
+            }
             Tarefa tarefa = executor.enviarTarefa(i);
             try {
                 fazerTarefa(tarefa);
@@ -36,9 +40,10 @@ public class Trabalhador extends Thread{
 
     private void fazerTarefa(Tarefa tarefa) throws IOException, InterruptedException {
         this.startTime = currentTimeMillis();
-        sleep((long)(tarefa.getCusto()*1000));
+        sleep(0,tarefa.getCusto());
+
         if(tarefa.isEscrita()){
-            System.out.println("escrita na thread:" + this.getName());
+            //System.out.println("escrita na thread:" + this.getName());
             executor.receberResultado(escrita(tarefa));
         }
         else {

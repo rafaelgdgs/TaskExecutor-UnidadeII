@@ -1,10 +1,10 @@
 public class Tarefa {
     private int id;
-    private float custo;
+    private byte custo;
     private boolean tipo;
     private byte valor;
 
-    public Tarefa(int id, float custo, boolean tipo, byte valor) {
+    public Tarefa(int id, byte custo, boolean tipo, byte valor) {
         this.id = id;
         this.custo = custo;
         this.tipo = tipo;
@@ -19,11 +19,11 @@ public class Tarefa {
         this.id = id;
     }
 
-    public float getCusto() {
+    public byte getCusto() {
         return custo;
     }
 
-    public void setCusto(float custo) {
+    public void setCusto(byte custo) {
         this.custo = custo;
     }
 
